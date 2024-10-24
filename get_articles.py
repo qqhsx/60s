@@ -19,7 +19,7 @@ def cache_set(cachefile, data):
 def fetch60s(encode='json', offset=0, is_v1=False, force=False):
     api = 'https://www.zhihu.com/api/v4/columns/c_1715391799055720448/items?limit=8'
     today = time.strftime('%Y-%m-%d', time.gmtime(time.time() + 8 * 3600 - int(offset) * 24 * 3600))
-    cachefile = f'60s_{today}.json'
+    cachefile = f'articles/60s_{today}.json'  # 修改文件路径
 
     final_data = cache_get(cachefile)
     from_cache = final_data is not None and isinstance(final_data, dict) and 'result' in final_data
@@ -47,7 +47,7 @@ def fetch60s(encode='json', offset=0, is_v1=False, force=False):
             for item in data['data']:
                 updated = item.get('updated', item.get('created', 0))
                 day = time.strftime('%Y-%m-%d', time.gmtime(int(updated) + 8 * 3600))
-                cachefile = f'60s_{day}.json'
+                cachefile = f'articles/60s_{day}.json'  # 修改文件路径
 
                 if item.get('content_need_truncated', False):
                     if cache_get(cachefile):
