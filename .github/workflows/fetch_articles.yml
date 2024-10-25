@@ -5,7 +5,7 @@ on:
     branches:
       - main # 触发动作的分支
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0 7 * * *'
 
 jobs:
   fetch_articles:
