@@ -5,7 +5,8 @@ on:
     branches:
       - main # 触发动作的分支
   schedule:
-    - cron: '0 8 * * *'
+    # 每天UTC时间00:00运行，按需调整
+    - cron: '0 * * * *'
 
 jobs:
   fetch_articles:
