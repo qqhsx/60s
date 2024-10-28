@@ -3,10 +3,9 @@ name: Fetch Articles from Zhihu
 on:
   push:
     branches:
-      - main # 触发动作的分支
+      - main
   schedule:
-    # 每天UTC时间00:00运行，按需调整
-    - cron: '30 7 * * *'
+    - cron: "0 * * * *"
 
 jobs:
   fetch_articles:
