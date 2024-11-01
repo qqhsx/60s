@@ -12,11 +12,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create articles directory
+        run: mkdir -p articles
+
+      - name: List current directory
+        run: ls -la
+
+      - name: List files in articles directory
+        run: ls -la articles
+
       - name: Check if today's JSON file exists
         id: check_file
         run: |
           today=$(date -u -d "8 hours" '+%Y-%m-%d')
-          cachefile="articles/60s_${today}.json"
+          cachefile="${GITHUB_WORKSPACE}/articles/60s_${today}.json"
           echo "Checking for file: $cachefile"
           if [ -f "$cachefile" ]; then
             echo "File exists, exiting."
@@ -25,12 +37,6 @@ jobs:
             echo "File does not exist, will fetch articles."
             echo "file_exists=false" >> $GITHUB_ENV
           fi
-
-      - name: Create articles directory
-        run: mkdir -p articles
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -50,7 +56,7 @@ jobs:
         if: env.file_exists == 'false'
         run: |
           today=$(date -u -d "8 hours" '+%Y-%m-%d')
-          cachefile="articles/60s_${today}.json"
+          cachefile="${GITHUB_WORKSPACE}/articles/60s_${today}.json"
           if [ ! -f "$cachefile" ]; then
             echo "Error: $cachefile does not exist."
             exit 1
@@ -62,7 +68,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           today=$(date -u -d "8 hours" '+%Y-%m-%d')
-          cachefile="articles/60s_${today}.json"
+          cachefile="${GITHUB_WORKSPACE}/articles/60s_${today}.json"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add $cachefile
