@@ -17,6 +17,7 @@ jobs:
         run: |
           today=$(date -u -d "8 hours" '+%Y-%m-%d')
           cachefile="articles/60s_${today}.json"
+          echo "Checking for file: $cachefile"
           if [ -f "$cachefile" ]; then
             echo "File exists, exiting."
             echo "file_exists=true" >> $GITHUB_ENV
