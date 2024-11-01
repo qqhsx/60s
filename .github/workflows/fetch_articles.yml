@@ -18,12 +18,6 @@ jobs:
       - name: Create articles directory
         run: mkdir -p articles
 
-      - name: List current directory
-        run: ls -la
-
-      - name: List files in articles directory
-        run: ls -la articles
-
       - name: Check if today's JSON file exists
         id: check_file
         run: |
