@@ -12,11 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Check if today's JSON file exists
+        id: check_file
+        run: |
+          today=$(date -u -d "8 hours" '+%Y-%m-%d')
+          cachefile="articles/60s_${today}.json"
+          if [ -f "$cachefile" ]; then
+            echo "File exists, exiting."
+            echo "file_exists=true" >> $GITHUB_ENV
+          else
+            echo "File does not exist, will fetch articles."
+            echo "file_exists=false" >> $GITHUB_ENV
+          fi
 
       - name: Create articles directory
         run: mkdir -p articles
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -29,9 +42,11 @@ jobs:
           pip install requests
 
       - name: Run script to fetch articles
+        if: env.file_exists == 'false'
         run: python get_articles.py
 
       - name: Check if 60s_YYYY-MM-DD.json exists
+        if: env.file_exists == 'false'
         run: |
           today=$(date -u -d "8 hours" '+%Y-%m-%d')
           cachefile="articles/60s_${today}.json"
@@ -40,10 +55,8 @@ jobs:
             exit 1
           fi
 
-      - name: List files in the current directory
-        run: ls -la
-
       - name: Commit and push changes
+        if: env.file_exists == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
